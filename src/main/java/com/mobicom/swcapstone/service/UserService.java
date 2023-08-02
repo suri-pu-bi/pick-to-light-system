@@ -4,6 +4,7 @@ import com.mobicom.swcapstone.domain.Role;
 import com.mobicom.swcapstone.domain.User;
 import com.mobicom.swcapstone.dto.request.LoginRequest;
 import com.mobicom.swcapstone.dto.response.LoginResponse;
+import com.mobicom.swcapstone.dto.response.UserResponse;
 import com.mobicom.swcapstone.jwt.JwtProvider;
 import com.mobicom.swcapstone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,21 @@ public class UserService {
     // 회원 가입
     public boolean register(LoginRequest request) throws Exception{
         try{
+
+            if (userRepository.findByUserId(request.getUserId()).isPresent()) {
+                throw new Exception("이미 등록된 사용자입니다.");
+            }
+
+
             User user = User.builder()
                     .userId(request.getUserId())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.OPERATOR)
+                    .role(request.getRole())
                     .build();
 
             userRepository.save(user);
+
+
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new Exception("잘못된 요청입니다.");
@@ -64,16 +73,15 @@ public class UserService {
     }
 
     // 유저 정보 가져오기
-    public LoginResponse getUserInfo(String userId, HttpServletRequest req) throws Exception {
+    public UserResponse getUserInfo(String userId) throws Exception {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow( ()-> new Exception("계정을 찾을 수 없습니다."));
 
-        return LoginResponse.builder()
+        return UserResponse.builder()
                 .id(user.getId())
                 .userId(user.getUserId())
                 .password(user.getPassword())
                 .role(user.getRole())
-                .token(jwtProvider.resolveToken(req))
                 .build();
 
 

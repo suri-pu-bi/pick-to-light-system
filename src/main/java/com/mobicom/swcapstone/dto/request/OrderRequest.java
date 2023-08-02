@@ -1,6 +1,6 @@
 package com.mobicom.swcapstone.dto.request;
 
-import com.mobicom.swcapstone.domain.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class LoginRequest {
+public class OrderRequest {
 
-    private String userId;
-    private String password;
+    private Long productId;
 
-    private Role role;
+    private Long count;
 }
