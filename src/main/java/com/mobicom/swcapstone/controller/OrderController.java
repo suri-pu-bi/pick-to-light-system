@@ -2,6 +2,7 @@ package com.mobicom.swcapstone.controller;
 
 
 import com.mobicom.swcapstone.dto.request.OrderRequest;
+import com.mobicom.swcapstone.dto.response.OrderProductResponse;
 import com.mobicom.swcapstone.dto.response.OrderResponse;
 import com.mobicom.swcapstone.dto.response.ProductResponse;
 import com.mobicom.swcapstone.service.OrderService;
@@ -27,7 +28,7 @@ public class OrderController {
     }
 
     @PostMapping("/manager/order")
-    public ResponseEntity<OrderResponse> registerOrder(@AuthenticationPrincipal UserDetails userDetails, @RequestBody List<OrderRequest> request) throws Exception {
+    public ResponseEntity<List<OrderProductResponse>> registerOrder(@AuthenticationPrincipal UserDetails userDetails, @RequestBody List<OrderRequest> request) throws Exception {
         String userId = userDetails.getUsername();
         return new ResponseEntity<>(orderService.registerOrder(userId, request), HttpStatus.OK);
     }

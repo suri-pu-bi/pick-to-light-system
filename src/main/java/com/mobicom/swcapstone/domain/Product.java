@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Table(name = "PRODUCT")
 @Getter
+@Setter
 @Entity
 // 3개를 같이 써야하는 이유
 @AllArgsConstructor
@@ -31,6 +32,8 @@ public class Product {
 
     @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String location;
+
+
 
 
 

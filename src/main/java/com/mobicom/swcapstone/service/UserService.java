@@ -27,29 +27,24 @@ public class UserService {
     private final JwtProvider jwtProvider;
 
     // 회원 가입
-    public boolean register(LoginRequest request) throws Exception{
-        try{
-
-            if (userRepository.findByUserId(request.getUserId()).isPresent()) {
-                throw new Exception("이미 등록된 사용자입니다.");
-            }
-
-
-            User user = User.builder()
-                    .userId(request.getUserId())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .role(request.getRole())
-                    .build();
-
-            userRepository.save(user);
-
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new Exception("잘못된 요청입니다.");
+    public boolean register(LoginRequest request) throws Exception {
+        if (isUserAlreadyRegistered(request.getUserId())) {
+            throw new Exception("이미 등록된 사용자입니다.");
         }
 
+        User user = User.builder()
+                .userId(request.getUserId())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .build();
+
+        userRepository.save(user);
         return true;
+    }
+
+    // 중복 회원 검증
+    private boolean isUserAlreadyRegistered(String userId) {
+        return userRepository.findByUserId(userId).isPresent();
     }
 
 
